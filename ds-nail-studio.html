@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DS Nail Studio | Nail Salon in Hauraki, Auckland</title>
+<meta name="description" content="DS Nail Studio is a modern nail salon in Hauraki, Auckland, offering beautifully finished nail experiences in a refined studio setting.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ivory:#F8F4EE; --blush:#EFDFD5; --nude:#E1C6B0; --champagne:#C9A876;
+  --gold:#A47F49; --charcoal:#221E1A; --charcoal-soft:#4A423C; --line:rgba(34,30,26,.14);
+  --bg:var(--ivory); --fg:var(--charcoal);
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+html{scroll-behavior:smooth; scroll-padding-top:calc(96px + env(safe-area-inset-top,0px));}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} *{animation-duration:.001ms !important; transition-duration:.001ms !important;} }
+body{
+  background:var(--bg); color:var(--fg); font-family:'Inter',sans-serif; font-weight:400;
+  -webkit-font-smoothing:antialiased; overflow-x:hidden;
+}
+h1,h2,h3,.serif{font-family:'Fraunces',serif; font-weight:400; letter-spacing:.01em;}
+a{color:inherit; text-decoration:none;}
+img{max-width:100%; display:block;}
+.wrap{max-width:1240px; margin:0 auto; padding:0 32px;}
+@media (max-width:700px){ .wrap{padding:0 22px;} }
+
+/* --- texture / abstract nail art helpers --- */
+.swatch{position:relative; overflow:hidden; background:linear-gradient(160deg,var(--a) 0%, var(--b) 100%);}
+.swatch::after{content:''; position:absolute; inset:0; background:
+  radial-gradient(ellipse 60% 40% at 70% 20%, rgba(255,255,255,.35), transparent 60%);}
+.arc{position:absolute; border-radius:50%; opacity:.5;}
+.blob{position:absolute; border-radius:50%; filter:blur(70px); pointer-events:none; z-index:0;}
+.swatch{filter:blur(0px); transition:filter 1.1s ease;}
+.reveal .swatch{filter:blur(14px);}
+.reveal.in .swatch{filter:blur(0px);}
+
+/* --- nav --- */
+header{position:fixed; top:0; left:0; right:0; z-index:100; padding:26px 0; transition:padding .4s ease, background .4s ease, box-shadow .4s ease;}
+header .wrap{display:flex; align-items:center; justify-content:space-between;}
+header.scrolled{padding:14px 0; background:rgba(248,244,238,.92); backdrop-filter:blur(10px); box-shadow:0 1px 0 var(--line);}
+.brand{font-family:'Fraunces',serif; font-size:19px; letter-spacing:.14em;}
+nav.links{display:flex; gap:34px; font-size:13px; letter-spacing:.06em; text-transform:uppercase;}
+nav.links a{position:relative; padding-bottom:4px;}
+nav.links a::after{content:''; position:absolute; left:0; bottom:0; width:0; height:1px; background:var(--gold); transition:width .3s ease;}
+nav.links a:hover::after{width:100%;}
+.book-btn{border:1px solid var(--charcoal); padding:11px 22px; font-size:12px; letter-spacing:.1em; text-transform:uppercase; transition:background .3s ease, color .3s ease;}
+.book-btn:hover{background:var(--charcoal); color:var(--ivory);}
+.burger{display:none; flex-direction:column; gap:5px; width:26px; cursor:pointer; background:none; border:none;}
+.burger span{height:1px; background:var(--charcoal); width:100%; transition:transform .35s ease, opacity .35s ease;}
+@media (max-width:860px){
+  nav.links, header .book-btn{display:none;}
+  .burger{display:flex;}
+}
+.mobile-menu{position:fixed; inset:0; background:var(--charcoal); color:var(--ivory); z-index:99;
+  display:flex; flex-direction:column; align-items:flex-start; justify-content:center; gap:26px; padding:0 36px;
+  transform:translateY(-100%); transition:transform .5s cubic-bezier(.65,0,.35,1);}
+.mobile-menu.open{transform:translateY(0);}
+.mobile-menu a{font-family:'Fraunces',serif; font-size:32px;}
+.mobile-menu .book-btn{border-color:var(--ivory); margin-top:10px;}
+
+/* --- hero --- */
+.hero{position:relative; min-height:100svh; display:flex; align-items:flex-end; padding:0 0 90px;
+  background:linear-gradient(170deg,#EFE2D6 0%, #E7CDBB 55%, #D9AE8C 100%);}
+.hero::before{content:''; position:absolute; inset:0;
+  background:radial-gradient(ellipse 55% 45% at 78% 30%, rgba(255,255,255,.55), transparent 62%),
+             radial-gradient(ellipse 40% 30% at 15% 75%, rgba(164,127,73,.28), transparent 65%);}
+.hero-inner{position:relative; z-index:2; width:100%;}
+.hero .blob{opacity:.6;}
+.hero .blob1{width:420px; height:420px; background:#F3E2D2; top:-8%; right:6%;}
+.hero .blob2{width:300px; height:300px; background:#8C6A46; opacity:.35; bottom:6%; left:-4%;}
+.loc-tag{font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:var(--charcoal-soft); margin-bottom:26px; opacity:0; animation:fadeUp .9s .2s ease forwards;}
+.hero h1{font-size:clamp(52px,10vw,132px); line-height:.92; letter-spacing:.01em; opacity:0; animation:fadeUp 1s .35s ease forwards;}
+.hero .tag{font-family:'Fraunces',serif; font-style:italic; font-size:clamp(20px,2.6vw,30px); margin:22px 0 18px; max-width:520px; opacity:0; animation:fadeUp 1s .5s ease forwards;}
+.hero p.sub{max-width:420px; font-size:15px; line-height:1.65; color:var(--charcoal-soft); margin-bottom:38px; opacity:0; animation:fadeUp 1s .65s ease forwards;}
+.hero-ctas{display:flex; gap:18px; flex-wrap:wrap; opacity:0; animation:fadeUp 1s .8s ease forwards;}
+@keyframes fadeUp{from{opacity:0; transform:translateY(22px);} to{opacity:1; transform:translateY(0);}}
+.btn-primary{background:var(--charcoal); color:var(--ivory); padding:16px 34px; font-size:12px; letter-spacing:.12em; text-transform:uppercase; transition:transform .35s ease, box-shadow .35s ease;}
+.btn-primary:hover{transform:translateY(-2px); box-shadow:0 10px 24px rgba(34,30,26,.28);}
+.btn-outline{border:1px solid var(--charcoal); padding:16px 34px; font-size:12px; letter-spacing:.12em; text-transform:uppercase; transition:transform .35s ease;}
+.btn-outline:hover{transform:translateY(-2px);}
+
+/* --- reveal on scroll --- */
+.reveal{opacity:0; transform:translateY(28px); transition:opacity .9s ease, transform .9s ease;}
+.reveal.in{opacity:1; transform:translateY(0);}
+
+section{padding:120px 0;}
+@media (max-width:700px){ section{padding:80px 0;} }
+.eyebrow{font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:var(--gold); margin-bottom:18px;}
+.section-head{font-size:clamp(30px,4.4vw,50px); max-width:640px; line-height:1.08;}
+
+/* --- about --- */
+.about-grid{display:grid; grid-template-columns:0.95fr 1.05fr; gap:80px; align-items:center;}
+@media (max-width:860px){ .about-grid{grid-template-columns:1fr; gap:44px;} }
+.about-art{aspect-ratio:4/5; border-radius:2px; --a:#E7D2C1; --b:#B98F63; position:relative;}
+.about-mark{position:absolute; bottom:26px; left:26px; color:#fff; font-family:'Fraunces',serif;}
+.about-mark .big{font-size:15px; letter-spacing:.18em;}
+.about-mark .small{font-size:11px; letter-spacing:.24em; opacity:.85;}
+.about-text p{font-size:16px; line-height:1.85; color:var(--charcoal-soft); max-width:480px; margin-top:20px;}
+.about-line{width:56px; height:1px; background:var(--gold); margin:30px 0;}
+
+/* --- services --- */
+.services-list{border-top:1px solid var(--line); margin-top:56px;}
+.service-row{display:grid; grid-template-columns:70px 1fr auto; align-items:baseline; gap:24px; padding:30px 0; border-bottom:1px solid var(--line);}
+.service-row .idx{font-family:'Fraunces',serif; font-style:italic; color:var(--gold); font-size:15px;}
+.service-row .name{font-family:'Fraunces',serif; font-size:24px;}
+.service-row .desc{font-size:13.5px; color:var(--charcoal-soft); margin-top:4px; max-width:420px;}
+.service-row .price{font-size:16px; letter-spacing:.03em; white-space:nowrap;}
+@media (max-width:700px){
+  .service-row{grid-template-columns:36px 1fr; row-gap:6px;}
+  .service-row .price{grid-column:2; font-size:14px; color:var(--gold);}
+}
+.pkg-note{margin-top:54px; padding:30px; border:1px solid var(--line); display:flex; justify-content:space-between; gap:24px; flex-wrap:wrap;}
+.pkg-note h4{font-family:'Fraunces',serif; font-size:19px; margin-bottom:6px;}
+.pkg-note p{font-size:13.5px; color:var(--charcoal-soft); max-width:460px;}
+
+/* --- signature split --- */
+.split{display:grid; grid-template-columns:1fr 1fr; min-height:70vh;}
+@media (max-width:860px){ .split{grid-template-columns:1fr;} }
+.split-art{--a:#2b241f; --b:#6b4a30; position:relative; min-height:360px;}
+.split-art .arc{width:220px; height:220px; border:1px solid rgba(255,255,255,.35); top:20%; left:18%;}
+.split-art .arc2{width:130px; height:130px; background:var(--champagne); opacity:.5; bottom:14%; right:16%;}
+.split-text{display:flex; flex-direction:column; justify-content:center; padding:80px 64px; background:var(--blush);}
+@media (max-width:700px){ .split-text{padding:60px 26px;} }
+.split-text h2{font-size:clamp(30px,4.6vw,52px); line-height:1.05; max-width:420px;}
+.split-text p{font-size:15px; line-height:1.75; color:var(--charcoal-soft); max-width:400px; margin:24px 0 34px;}
+
+/* --- gallery --- */
+.gal-head{display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:16px;}
+.gal-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-top:52px;}
+@media (max-width:860px){ .gal-grid{grid-template-columns:repeat(2,1fr);} }
+.gal-item{position:relative; aspect-ratio:3/4; overflow:hidden; cursor:pointer;}
+.gal-item:nth-child(3n+1){aspect-ratio:3/4.6;}
+.gal-item img,.gal-item .swatch{width:100%; height:100%; transition:transform .7s cubic-bezier(.2,.7,.3,1);}
+.gal-item:hover .swatch{transform:scale(1.06);}
+.gal-overlay{position:absolute; inset:0; background:rgba(34,30,26,0); display:flex; align-items:flex-end; padding:16px; transition:background .4s ease;}
+.gal-item:hover .gal-overlay{background:rgba(34,30,26,.32);}
+.gal-overlay span{color:#fff; font-family:'Fraunces',serif; font-style:italic; font-size:13px; opacity:0; transform:translateY(8px); transition:opacity .4s ease, transform .4s ease;}
+.gal-item:hover .gal-overlay span{opacity:1; transform:translateY(0);}
+
+/* --- instagram --- */
+.insta{text-align:left;}
+.insta-btn{display:inline-flex; align-items:center; gap:10px; margin-top:26px; border-bottom:1px solid var(--charcoal); padding-bottom:6px; font-size:14px; letter-spacing:.05em;}
+.insta-grid{display:grid; grid-template-columns:repeat(6,1fr); gap:8px; margin-top:50px;}
+@media (max-width:700px){ .insta-grid{grid-template-columns:repeat(3,1fr);} }
+.insta-grid .swatch{aspect-ratio:1/1;}
+
+/* --- booking CTA --- */
+.cta-dark{background:var(--charcoal); color:var(--ivory); text-align:center;}
+.cta-dark h2{font-size:clamp(34px,6vw,64px); max-width:760px; margin:0 auto; line-height:1.05;}
+.cta-dark p{color:#C9C0B6; margin:22px auto 40px; max-width:420px; font-size:15px;}
+.cta-dark .hero-ctas{justify-content:center;}
+.cta-dark .btn-primary{background:var(--ivory); color:var(--charcoal);}
+.cta-dark .btn-outline{border-color:var(--ivory);}
+
+/* --- location --- */
+.loc-grid{display:grid; grid-template-columns:1fr 1fr; gap:70px; align-items:center;}
+@media (max-width:860px){ .loc-grid{grid-template-columns:1fr; gap:40px;} }
+.loc-details p{font-size:16px; line-height:1.7; margin-bottom:6px;}
+.loc-phone{margin-top:22px; font-size:19px; font-family:'Fraunces',serif;}
+.loc-actions{display:flex; gap:16px; margin-top:34px; flex-wrap:wrap;}
+.loc-map{--a:#D9C3AE; --b:#A9814A; aspect-ratio:4/3; position:relative;}
+.loc-map .pin{position:absolute; top:44%; left:48%; width:14px; height:14px; border-radius:50% 50% 50% 0; background:var(--charcoal); transform:rotate(-45deg);}
+
+/* --- footer --- */
+footer{border-top:1px solid var(--line); padding:70px 0 40px;}
+.foot-top{display:grid; grid-template-columns:1.2fr 1fr 1fr; gap:40px;}
+@media (max-width:700px){ .foot-top{grid-template-columns:1fr; gap:30px;} }
+.foot-top h3{font-size:20px; letter-spacing:.1em;}
+.foot-top .tagline{font-size:12px; letter-spacing:.16em; color:var(--charcoal-soft); margin-top:10px;}
+.foot-col a{display:block; font-size:13.5px; color:var(--charcoal-soft); margin-bottom:10px;}
+.foot-col a:hover{color:var(--charcoal);}
+.foot-col h5{font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--gold); margin-bottom:16px;}
+.foot-bottom{margin-top:60px; padding-top:24px; border-top:1px solid var(--line); display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; font-size:12px; color:var(--charcoal-soft);}
+</style>
+</head>
+<body>
+
+<header id="siteHeader">
+  <div class="wrap">
+    <a href="#top" class="brand">DS NAIL STUDIO</a>
+    <nav class="links">
+      <a href="#top">Home</a><a href="#about">About</a><a href="#services">Services</a>
+      <a href="#gallery">Gallery</a><a href="#instagram">Instagram</a><a href="#booking-form">Book</a><a href="#contact">Contact</a>
+    </nav>
+    <a class="book-btn" href="#booking-form">Book Now</a>
+    <button class="burger" id="burgerBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#top">Home</a><a href="#about">About</a><a href="#services">Services</a>
+  <a href="#gallery">Gallery</a><a href="#instagram">Instagram</a><a href="#booking-form">Book</a><a href="#contact">Contact</a>
+  <a class="book-btn" href="#booking-form">Book Now</a>
+</div>
+
+<section class="hero" id="top">
+  <div class="blob blob1"></div>
+  <div class="blob blob2"></div>
+  <div class="wrap hero-inner">
+    <div class="loc-tag">HAURAKI · AUCKLAND</div>
+    <h1 class="serif">DS Nail<br>Studio</h1>
+    <p class="tag">Beautiful nails. Effortless confidence.</p>
+    <p class="sub">A refined nail studio in Hauraki, Auckland, creating polished, beautiful looks designed around you.</p>
+    <div class="hero-ctas">
+      <a class="btn-primary" href="#booking-form">Book Your Appointment</a>
+      <a class="btn-outline" href="https://www.instagram.com/dsnailstudio.papatoetoe/" target="_blank" rel="noopener">View Instagram</a>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="wrap about-grid">
+    <div class="about-art swatch reveal">
+      <svg width="52%" height="72%" viewBox="0 0 200 260" fill="none" xmlns="http://www.w3.org/2000/svg" style="position:absolute; top:8%; left:50%; transform:translateX(-50%);">
+        <path d="M75 260c-24 0-38-16-40-40l-4-70c-1-10 7-16 14-14 6 2 9 8 10 15l4 34" stroke="#F8F4EE" stroke-width="1.6" opacity="0.85"/>
+        <path d="M75 100V22c0-11 17-11 17 0v70" stroke="#F8F4EE" stroke-width="1.6" opacity="0.85"/>
+        <path d="M92 92V14c0-11 17-11 17 0v82" stroke="#F8F4EE" stroke-width="1.6" opacity="0.85"/>
+        <path d="M109 96V40c0-10 16-10 16 0v70c0 4-1 8-2 11" stroke="#F8F4EE" stroke-width="1.6" opacity="0.85"/>
+        <path d="M125 110l10-18c5-8 18-2 14 8l-14 30" stroke="#F8F4EE" stroke-width="1.6" opacity="0.85"/>
+        <ellipse cx="83.5" cy="20" rx="9" ry="13" fill="#C9A876" opacity="0.9"/>
+        <ellipse cx="100.5" cy="12" rx="9" ry="13" fill="#C9A876" opacity="0.9"/>
+      </svg>
+      <div class="about-mark"><div class="big">DS</div><div class="small">NAIL STUDIO</div></div>
+    </div>
+    <div class="about-text reveal">
+      <div class="eyebrow">About the studio</div>
+      <h2 class="section-head">A little more than a nail appointment</h2>
+      <div class="about-line"></div>
+      <p>DS Nail Studio is a modern nail destination in Hauraki, Auckland, created for anyone who loves beautifully finished nails and a refined beauty experience. Every visit is unhurried, considered, and centred on you.</p>
+    </div>
+  </div>
+</section>
+
+<section id="services">
+  <div class="wrap">
+    <div class="eyebrow reveal">Your nails, your signature</div>
+    <h2 class="section-head reveal">Treatments, thoughtfully priced</h2>
+    <div class="services-list">
+      <div class="service-row reveal">
+        <div class="idx">01</div>
+        <div><div class="name">Removal</div><div class="desc">Careful, damage-conscious removal of existing gel or acrylic.</div></div>
+        <div class="price">$25</div>
+      </div>
+      <div class="service-row reveal">
+        <div class="idx">02</div>
+        <div><div class="name">Gel Polish</div><div class="desc">A glossy, long-lasting finish for an elevated everyday look.</div></div>
+        <div class="price">$39</div>
+      </div>
+      <div class="service-row reveal">
+        <div class="idx">03</div>
+        <div><div class="name">Acrylic Nails</div><div class="desc">Sculpted length and shape, finished to your preference.</div></div>
+        <div class="price">$69</div>
+      </div>
+      <div class="service-row reveal">
+        <div class="idx">04</div>
+        <div><div class="name">Gel Extension</div><div class="desc">A natural-feeling extension with a smooth, glossy set.</div></div>
+        <div class="price">$69</div>
+      </div>
+      <div class="service-row reveal">
+        <div class="idx">05</div>
+        <div><div class="name">Builder Gel</div><div class="desc">Strengthened natural nails with a refined, glass-like finish.</div></div>
+        <div class="price">$49</div>
+      </div>
+      <div class="service-row reveal">
+        <div class="idx">06</div>
+        <div><div class="name">Pedicure with Massage</div><div class="desc">A relaxing soak, cuticle care and massage, polish only if added.</div></div>
+        <div class="price">$49</div>
+      </div>
+    </div>
+    <div class="pkg-note reveal">
+      <div>
+        <h4>Signature packages</h4>
+        <p>Manicure and pedicure combined, from a $49 pedicure massage up to the full $109 hands &amp; toes experience. Ask in studio for the combination that suits you.</p>
+        <p style="margin-top:14px;"><a href="https://epsomsalt.nz/" target="_blank" rel="noopener" style="text-decoration:underline; font-size:13px;">Epsom Salts – Magnesium Sulfate – Natural Bath Salt – The Epsom Salt Company</a></p>
+      </div>
+      <a class="btn-outline" href="tel:0220735718">Ask About Packages</a>
+    </div>
+  </div>
+</section>
+
+<section class="split">
+  <div class="split-art swatch reveal"><div class="arc"></div><div class="arc arc2"></div></div>
+  <div class="split-text reveal">
+    <div class="eyebrow">The DS experience</div>
+    <h2 class="serif">Details matter.</h2>
+    <p>From the smallest detail to the final finish, every set is designed to leave you feeling polished, confident and completely yourself.</p>
+    <a class="btn-outline" href="#gallery">Discover DS</a>
+  </div>
+</section>
+
+<section id="gallery">
+  <div class="wrap">
+    <div class="gal-head">
+      <h2 class="section-head reveal">The DS look</h2>
+      <div class="eyebrow reveal" style="margin-bottom:0;">08 looks, one signature finish</div>
+    </div>
+    <div class="gal-grid" id="galGrid"></div>
+  </div>
+</section>
+
+<section id="instagram" class="insta">
+  <div class="wrap">
+    <div class="eyebrow reveal">Follow the DS look</div>
+    <h2 class="section-head reveal">See the latest sets, nail inspiration and studio updates on Instagram.</h2>
+    <a class="insta-btn reveal" href="https://www.instagram.com/dsnailstudio.papatoetoe/" target="_blank" rel="noopener">@dsnailstudio.papatoetoe</a>
+    <div class="insta-grid" id="instaGrid"></div>
+  </div>
+</section>
+
+<section class="cta-dark">
+  <div class="wrap">
+    <h2 class="serif reveal">Ready for your next set?</h2>
+    <p class="reveal">Your next favourite nail look starts at DS Nail Studio.</p>
+    <div class="hero-ctas reveal">
+      <a class="btn-primary" href="tel:0220735718">Call 022 073 5718</a>
+      <a class="btn-outline" href="https://www.instagram.com/dsnailstudio.papatoetoe/" target="_blank" rel="noopener">Visit Instagram</a>
+    </div>
+  </div>
+</section>
+
+<section id="booking-form">
+  <div class="wrap">
+    <div class="eyebrow reveal">Prefer email</div>
+    <h2 class="section-head reveal">Request an appointment</h2>
+    <p style="max-width:440px; color:var(--charcoal-soft); font-size:15px; line-height:1.7; margin-top:18px;">Send us your details and preferred time, and we'll confirm by email.</p>
+    <form id="bookingForm" class="reveal" style="max-width:560px; margin-top:44px; display:grid; gap:22px;">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:22px;">
+        <div>
+          <label style="font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--charcoal-soft);">Name</label>
+          <input required name="name" type="text" style="width:100%; padding:12px 0; border:none; border-bottom:1px solid var(--line); background:transparent; font-family:'Inter',sans-serif; font-size:15px; margin-top:6px; outline:none;">
+        </div>
+        <div>
+          <label style="font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--charcoal-soft);">Phone</label>
+          <input name="phone" type="tel" style="width:100%; padding:12px 0; border:none; border-bottom:1px solid var(--line); background:transparent; font-family:'Inter',sans-serif; font-size:15px; margin-top:6px; outline:none;">
+        </div>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:22px;">
+        <div>
+          <label style="font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--charcoal-soft);">Preferred date</label>
+          <input name="date" type="date" style="width:100%; padding:12px 0; border:none; border-bottom:1px solid var(--line); background:transparent; font-family:'Inter',sans-serif; font-size:15px; margin-top:6px; outline:none;">
+        </div>
+        <div>
+          <label style="font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--charcoal-soft);">Preferred time</label>
+          <input name="time" type="time" style="width:100%; padding:12px 0; border:none; border-bottom:1px solid var(--line); background:transparent; font-family:'Inter',sans-serif; font-size:15px; margin-top:6px; outline:none;">
+        </div>
+      </div>
+      <div>
+        <label style="font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--charcoal-soft);">Service</label>
+        <select name="service" style="width:100%; padding:12px 0; border:none; border-bottom:1px solid var(--line); background:transparent; font-family:'Inter',sans-serif; font-size:15px; margin-top:6px; outline:none;">
+          <option>Removal</option><option>Gel Polish</option><option>Acrylic Nails</option>
+          <option>Gel Extension</option><option>Builder Gel</option><option>Pedicure with Massage</option>
+          <option>Signature Package</option><option>Not sure yet</option>
+        </select>
+      </div>
+      <div>
+        <label style="font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--charcoal-soft);">Notes</label>
+        <textarea name="notes" rows="3" style="width:100%; padding:12px 0; border:none; border-bottom:1px solid var(--line); background:transparent; font-family:'Inter',sans-serif; font-size:15px; margin-top:6px; outline:none; resize:vertical;"></textarea>
+      </div>
+      <button type="submit" class="btn-primary" style="justify-self:start; border:none; cursor:pointer;">Send Booking Request</button>
+    </form>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap loc-grid">
+    <div class="loc-details reveal">
+      <div class="eyebrow">Find us</div>
+      <h2 class="section-head" style="margin-bottom:26px;">DS Nail Studio</h2>
+      <p>1/335 Lake Road</p>
+      <p>Hauraki, Auckland 0622</p>
+      <p>New Zealand</p>
+      <div class="loc-phone"><a href="tel:0220735718">022 073 5718</a></div>
+      <div class="loc-actions">
+        <a class="btn-primary" href="https://www.google.com/maps/search/?api=1&query=1%2F335+Lake+Road%2C+Hauraki%2C+Auckland+0622" target="_blank" rel="noopener">Get Directions</a>
+        <a class="btn-outline" href="tel:0220735718">Call the Studio</a>
+      </div>
+    </div>
+    <div class="loc-map swatch reveal">
+      <svg width="100%" height="100%" viewBox="0 0 400 300" preserveAspectRatio="none" style="position:absolute; inset:0;">
+        <line x1="0" y1="150" x2="400" y2="150" stroke="#F8F4EE" stroke-width="3" opacity="0.75"/>
+        <line x1="230" y1="0" x2="230" y2="300" stroke="#F8F4EE" stroke-width="1.4" opacity="0.5"/>
+        <line x1="90" y1="0" x2="90" y2="300" stroke="#F8F4EE" stroke-width="1.4" opacity="0.4"/>
+        <text x="140" y="140" fill="#221E1A" font-family="Inter, sans-serif" font-size="11" letter-spacing="1.5" opacity="0.75">LAKE ROAD</text>
+      </svg>
+      <div class="pin"></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-top">
+      <div>
+        <h3 class="serif">DS NAIL STUDIO</h3>
+        <div class="tagline">HAURAKI · AUCKLAND</div>
+      </div>
+      <div class="foot-col">
+        <h5>Studio</h5>
+        <a href="#top">Home</a><a href="#services">Services</a><a href="#gallery">Gallery</a><a href="#contact">Contact</a>
+      </div>
+      <div class="foot-col">
+        <h5>Connect</h5>
+        <a href="https://www.instagram.com/dsnailstudio.papatoetoe/" target="_blank" rel="noopener">Instagram</a>
+        <a href="tel:0220735718">022 073 5718</a>
+        <a href="https://www.google.com/maps/search/?api=1&query=1%2F335+Lake+Road%2C+Hauraki%2C+Auckland+0622" target="_blank" rel="noopener">1/335 Lake Road, Hauraki, Auckland 0622</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 DS Nail Studio. All rights reserved.</span>
+      <span>Designed for a refined nail experience.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// palette pool for generated swatches
+const pal=[['#EAD6C4','#B98F63'],['#E4C9AE','#8C6A46'],['#F0E1D2','#C9A876'],['#DEC3A6','#6B4A30'],
+           ['#EFDFD5','#A47F49'],['#E7D2C1','#221E1A'],['#F3E7DA','#B08D57'],['#D9C3AE','#3A332E']];
+function makeSwatch(i){
+  const [a,b]=pal[i%pal.length];
+  const d=document.createElement('div');
+  d.className='swatch'; d.style.setProperty('--a',a); d.style.setProperty('--b',b);
+  return d;
+}
+const nailStrokes=['#F8F4EE','#F8F4EE','#221E1A','#F8F4EE'];
+function makeNailArt(i){
+  const rot=(i%2===0? -8: 6) + (i%3)*3;
+  const stroke=nailStrokes[i%nailStrokes.length];
+  const wrap=document.createElement('div');
+  wrap.style.cssText='position:absolute; inset:0; display:flex; align-items:center; justify-content:center; transform:rotate('+rot+'deg);';
+  wrap.innerHTML='<svg width="46%" height="70%" viewBox="0 0 120 200" fill="none" xmlns="http://www.w3.org/2000/svg">'
+    +'<path d="M60 198c-30 0-46-22-46-64C14 72 30 2 60 2s46 70 46 132c0 42-16 64-46 64Z" stroke="'+stroke+'" stroke-width="1.4" opacity="0.85"/>'
+    +'<path d="M22 70c8-6 22-10 38-10s30 4 38 10" stroke="'+stroke+'" stroke-width="1" opacity="0.4"/>'
+    +'</svg>';
+  return wrap;
+}
+const galGrid=document.getElementById('galGrid');
+const galLabels=['Nude Manicure','French Tips','Glossy Set','Minimal Line','Gel Extension','Champagne Finish','Close-Up Detail','Studio Signature'];
+galLabels.forEach((label,i)=>{
+  const item=document.createElement('div'); item.className='gal-item reveal';
+  const sw=makeSwatch(i);
+  sw.style.position='relative';
+  sw.appendChild(makeNailArt(i));
+  const ov=document.createElement('div'); ov.className='gal-overlay';
+  const span=document.createElement('span'); span.textContent=label; ov.appendChild(span);
+  item.appendChild(sw); item.appendChild(ov); galGrid.appendChild(item);
+});
+const instaGrid=document.getElementById('instaGrid');
+for(let i=0;i<6;i++){
+  const sw=makeSwatch(i+2); sw.style.position='relative'; sw.appendChild(makeNailArt(i+2));
+  instaGrid.appendChild(sw);
+}
+
+// booking form -> mailto
+const bookingForm=document.getElementById('bookingForm');
+if(bookingForm){
+  bookingForm.addEventListener('submit',(e)=>{
+    e.preventDefault();
+    const f=new FormData(bookingForm);
+    const name=f.get('name')||''; const phone=f.get('phone')||''; const date=f.get('date')||'';
+    const time=f.get('time')||''; const service=f.get('service')||''; const notes=f.get('notes')||'';
+    const subject='Appointment Request - '+name;
+    const body='Name: '+name+'\nPhone: '+phone+'\nPreferred date: '+date+'\nPreferred time: '+time
+      +'\nService: '+service+'\nNotes: '+notes+'\n\nSent from the DS Nail Studio website.';
+    window.location.href='mailto:order@epsomsalt.nz?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
+  });
+}
+
+// sticky header
+const header=document.getElementById('siteHeader');
+window.addEventListener('scroll',()=>{ header.classList.toggle('scrolled', window.scrollY>40); });
+
+// mobile menu
+const burger=document.getElementById('burgerBtn'), menu=document.getElementById('mobileMenu');
+burger.addEventListener('click',()=>{
+  menu.classList.toggle('open');
+  burger.classList.toggle('open');
+});
+menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>menu.classList.remove('open')));
+
+// scroll reveal
+const obs=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); obs.unobserve(e.target); } });
+},{threshold:0.05, rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
